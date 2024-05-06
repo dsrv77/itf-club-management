@@ -1,6 +1,14 @@
 version: '3.9'
 
 services:
+  # api:
+  #   image: itf-clubmanagement-api
+  #   build: ./itf-club-management
+  #   ports:
+  #     - "5000:80"
+  #   depends_on:
+  #     - postgres
+
   postgres:
     image: postgres
     environment:
@@ -9,6 +17,8 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
   keycloak:
     image: quay.io/keycloak/keycloak:24.0.3

@@ -10,6 +10,6 @@ public sealed class ApplicationDbContext : DbContext
     {
     }
 
-    public DbSet<Member> Contacts { get; set; }
+    public DbSet<Member> Members { get; set; }
     public DbSet<Payment> Payments { get; set; }
 }
