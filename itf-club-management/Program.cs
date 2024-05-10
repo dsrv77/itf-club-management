@@ -3,15 +3,18 @@ using FastEndpoints.Swagger;
 using itf_club_management.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NSwag;
+using NSwag.Generation;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddRouting();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddFastEndpoints().SwaggerDocument();
-builder.Services.AddSwaggerGen();
+builder.Services.AddFastEndpoints();
+builder.Services.AddSwaggerGen().SwaggerDocument(opts => opts.EnableGetRequestsWithBody = true);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -45,14 +48,15 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // app.UseSwagger();
+    // app.UseSwaggerUi();
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
-app.UseCors("AllowSpecificOrigin");
 
-app.UseFastEndpoints().UseSwaggerGen();
+app.UseCors("AllowSpecificOrigin");
+app.UseRouting();
+app.UseAuthorization();
+app.UseFastEndpoints().UseOpenApi().UseSwaggerGen();
 
 app.Run();
