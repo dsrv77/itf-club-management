@@ -3,8 +3,6 @@ using FastEndpoints.Swagger;
 using itf_club_management.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NSwag;
-using NSwag.Generation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,8 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddRouting();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddFastEndpoints();
-builder.Services.AddSwaggerGen().SwaggerDocument(opts => opts.EnableGetRequestsWithBody = true);
+builder.Services.AddFastEndpoints().SwaggerDocument(x => x.EnableGetRequestsWithBody = true);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -57,6 +54,6 @@ app.UseHttpsRedirection();
 app.UseCors("AllowSpecificOrigin");
 app.UseRouting();
 app.UseAuthorization();
-app.UseFastEndpoints().UseOpenApi().UseSwaggerGen();
+app.UseFastEndpoints().UseSwaggerGen();
 
 app.Run();
